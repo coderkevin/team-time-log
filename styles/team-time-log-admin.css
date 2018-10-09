@@ -1,0 +1,24 @@
+
+.team-time-log-entry {
+	display: flex;
+	flex-direction: column;
+}
+
+.team-time-log-entry fieldset {
+	height: 2.5em;
+}
+
+.team-time-log-entry label {
+}
+
+.team-time-log-entry input {
+	height: 1.75em;
+}
+
+.team-time-log-entry-hour {
+	width: 3em;
+}
+
+.team-time-log-entry-minute {
+	width: 3em;
+}

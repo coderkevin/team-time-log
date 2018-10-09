@@ -1,8 +1,10 @@
 <?php
+namespace coderkevin\TeamTimeLog;
+
 /**
  * @package   TeamTimeLog
  * @author    Kevin Killingsworth
- * @copyright 2018 Automattic
+ * @copyright 2018 Kevin Killingsworth
  * @license   GPL-2.0+
  *
  * @wordpress-plugin
@@ -18,9 +20,15 @@
  */
 defined( 'ABSPATH' ) or die();
 
+include_once 'includes/utils.php';
+include_once 'includes/entry_metabox.php';
+
 class TeamTimeLog {
 	public function init() {
 		add_action( 'init', [ $this, 'registerPostType' ], 10, 3 );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueueAdminScripts' ], 10 );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueueAdminStyles' ], 10 );
+		add_filter( 'wp_insert_post_data', [ $this, 'setPostData' ], 10, 2 );
 	}
 
 	function registerPostType() {
@@ -59,9 +67,82 @@ class TeamTimeLog {
 			'menu_icon'          => 'dashicons-clock',
 			'supports'           => array( 'author' ),
 			'delete_with_user'   => true,
+			'register_meta_box_cb' => [ $this, 'registerMetaBox' ],
 		);
 	 
 		register_post_type( 'time-log-entry', $args );
+	}
+
+	function registerMetaBox() {
+		add_meta_box(
+			'team_time_log_entry_times',
+			'Clock In/Out',
+			[ $this, 'metaBoxCallback' ],
+			'time-log-entry',
+			'normal',
+			'default'
+		);
+	}
+
+	function enqueueAdminScripts() {
+		wp_enqueue_script(
+			'team-time-log-admin', 
+			plugin_dir_url( __FILE__ ) . 'js/team-time-log-admin.js',
+			[ 'jquery', 'jquery-ui-core', 'jquery-ui-datepicker' ],
+			time(), // TODO: use filemtime
+			true
+		);
+	}
+
+	function enqueueAdminStyles() {
+		wp_enqueue_style(
+			'team-time-log-admin-jquery-ui',
+			plugin_dir_url( __FILE__ ) . 'styles/jquery-ui/jquery-ui.css'
+		);
+		wp_enqueue_style(
+			'team-time-log-admin',
+			plugin_dir_url( __FILE__ ) . 'styles/team-time-log-admin.css',
+			[ 'team-time-log-admin-jquery-ui' ],
+			time() // TODO: use filemtime
+		);
+
+	}
+
+	function metaBoxCallback( $entry ) {
+		entry_metabox( $entry );
+	}
+
+	function setPostData( $data, $postarr ) {
+		$id = $postarr['ID'];
+		if ( 'time-log-entry' === $data['post_type'] ) {
+			$data['post_name'] = get_entry_name( $postarr );
+			$data['post_title'] = get_entry_title( $postarr );
+
+			// If we have a valid ID, set the clock in/out dates.
+			if ( $id ) {
+				// TODO: Use time zone/GMT for this.
+				$clock_in_date = inputs_to_datetime(
+					$_POST[ 'clock_in_' . $id . '_date' ],
+					$_POST[ 'clock_in_' . $id . '_hour' ],
+					$_POST[ 'clock_in_' . $id . '_minute' ]
+				);
+				$clock_in_str = datetime_to_database_string( $clock_in_date );
+
+				$clock_out_date = inputs_to_datetime(
+					$_POST[ 'clock_out_' . $id . '_date' ],
+					$_POST[ 'clock_out_' . $id . '_hour' ],
+					$_POST[ 'clock_out_' . $id . '_minute' ]
+				);
+				$clock_out_str = datetime_to_database_string( $clock_out_date );
+
+				// TODO: convert local/GMT
+				$data['post_date'] = $clock_in_str;
+				$data['post_date_gmt'] = $clock_in_str;
+				$data['post_modified'] = $clock_out_str;
+				$data['post_modified_gmt'] = $clock_out_str;
+			}
+			return $data;
+		}
 	}
 }
 
