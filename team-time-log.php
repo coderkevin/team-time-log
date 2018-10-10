@@ -22,6 +22,7 @@ defined( 'ABSPATH' ) or die();
 
 include_once 'includes/utils.php';
 include_once 'includes/entry_metabox.php';
+include_once 'includes/admin/admin_profile.php';
 
 class TeamTimeLog {
 	public function init() {
