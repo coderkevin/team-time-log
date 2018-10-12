@@ -1,0 +1,41 @@
+
+.site-header {
+	padding-top: 1em;
+	padding-bottom: 0;
+	text-align: center;
+	background-color: #444;
+	color: #BBB;
+}
+
+.site-header h1, h2, h3, h4, h5, h6 {
+	color: #EEE;
+}
+
+.timeclock-form {
+	padding-top: 1em;
+	display: grid;
+	grid-template-columns: 25% 75%;
+	grid-template-rows: auto;
+}
+
+.timeclock-form label {
+	text-align: right;
+	margin-right: 0.5rem;
+	font-size: 1.5rem;
+}
+
+.timeclock-form input, select {
+	font-size: 1.5rem;
+}
+
+.site-footer {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	padding-left: 1em;
+	padding-right: 1em;
+	color: #999;
+	background-color: #444;
+}

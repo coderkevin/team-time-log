@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) or die();
 include_once 'includes/utils.php';
 include_once 'includes/entry_metabox.php';
 include_once 'includes/admin/admin_profile.php';
-include_once 'includes/template_loader.php';
+include_once 'timeclock-theme/timeclock_theme_loader.php';
 
 
 class TeamTimeLog {
@@ -41,7 +41,6 @@ class TeamTimeLog {
 	}
 
 	public function activatePlugin() {
-		error_log( 'activate' );
 		$timeclock_slug = esc_sql( _x( 'time-clock', 'Page slug', 'team-time-log' ) );
 		$timeclock_title = _x( 'Time Clock', 'Page title', 'team-time-log' );
 
@@ -49,7 +48,6 @@ class TeamTimeLog {
 	}
 
 	public function deactivatePlugin() {
-		error_log( 'deactivate' );
 		trash_page( 'team-time-log_timeclock_page_id' );
 	}
 
