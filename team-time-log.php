@@ -23,15 +23,37 @@ defined( 'ABSPATH' ) or die();
 include_once 'includes/utils.php';
 include_once 'includes/entry_metabox.php';
 include_once 'includes/admin/admin_profile.php';
+include_once 'includes/template_loader.php';
+
 
 class TeamTimeLog {
+	public function __construct() {
+		$this->plugin_dir = plugin_dir_path( __FILE__ );
+	}
+
 	public function init() {
+		register_activation_hook( __FILE__, [ $this, 'activatePlugin' ] );
+		register_deactivation_hook( __FILE__, [ $this, 'deactivatePlugin' ] );
 		add_action( 'init', [ $this, 'registerPostType' ], 10, 3 );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueueAdminScripts' ], 10 );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueueAdminStyles' ], 10 );
 		add_filter( 'wp_insert_post_data', [ $this, 'setPostData' ], 10, 2 );
 	}
 
+	public function activatePlugin() {
+		error_log( 'activate' );
+		$timeclock_slug = esc_sql( _x( 'time-clock', 'Page slug', 'team-time-log' ) );
+		$timeclock_title = _x( 'Time Clock', 'Page title', 'team-time-log' );
+
+		create_page( $timeclock_slug, 'team-time-log_timeclock_page_id', $timeclock_title );
+	}
+
+	public function deactivatePlugin() {
+		error_log( 'deactivate' );
+		trash_page( 'team-time-log_timeclock_page_id' );
+	}
+
+	// TODO: Move out of main plugin file.
 	function registerPostType() {
 		$labels = array(
 			'name'                  => _x( 'Time Log Entries', 'Post type general name', 'textdomain' ),
@@ -74,6 +96,7 @@ class TeamTimeLog {
 		register_post_type( 'time-log-entry', $args );
 	}
 
+	// TODO: Move out of main plugin file.
 	function registerMetaBox() {
 		add_meta_box(
 			'team_time_log_entry_times',
@@ -109,10 +132,12 @@ class TeamTimeLog {
 
 	}
 
+	// TODO: Move out of main plugin file.
 	function metaBoxCallback( $entry ) {
 		entry_metabox( $entry );
 	}
 
+	// TODO: Move out of main plugin file.
 	function setPostData( $data, $postarr ) {
 		$id = $postarr['ID'];
 		if ( 'time-log-entry' === $data['post_type'] ) {
@@ -144,6 +169,7 @@ class TeamTimeLog {
 			}
 			return $data;
 		}
+		return $data;
 	}
 }
 
