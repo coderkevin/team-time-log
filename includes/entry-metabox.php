@@ -1,7 +1,7 @@
 <?php
 namespace coderkevin\TeamTimeLog;
 
-include_once 'date_input.php';
+include_once 'date-input.php';
 
 function entry_metabox( $entry ) {
 	$entry_id = $entry->ID;

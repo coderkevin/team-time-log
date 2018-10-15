@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) or die();
 
 class Timeclock {
 	public function init() {
-		add_action( 'team-time-log_user_options', [ $this, 'renderUserOptions' ] );
+		add_action( 'team-time-log_user_options', [ $this, 'render_user_options' ] );
 	}
 
 	public function render_user_options() {

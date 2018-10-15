@@ -21,11 +21,12 @@ namespace coderkevin\TeamTimeLog;
 defined( 'ABSPATH' ) or die();
 
 include_once 'includes/utils.php';
-include_once 'includes/entry_metabox.php';
-include_once 'includes/admin/admin_profile.php';
+include_once 'includes/entry-metabox.php';
+include_once 'includes/admin/class-admin-user-profile.php';
 include_once 'includes/timeclock.php';
-include_once 'timeclock-theme/timeclock_theme_loader.php';
+include_once 'timeclock-theme/class-timeclock-theme-loader.php';
 
+// TODO: Move admin stuff to another class and only include when needed.
 class TeamTimeLog {
 	public function __construct() {
 		$this->plugin_dir = plugin_dir_path( __FILE__ );
