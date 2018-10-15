@@ -12,11 +12,11 @@ function entry_metabox( $entry ) {
 ?>
 
 <div class="team-time-log-entry">
-	<?= date_input( 'clock_in_' . $entry_id, __( 'Clock In:', 'team-time-log' ), $clock_in_date ) ?>
+	<?php date_input( 'clock_in_' . $entry_id, __( 'Clock In:', 'team-time-log' ), $clock_in_date ) ?>
 </div>
 
 <div class="team-time-log-entry">
-	<?= date_input( 'clock_out_' . $entry_id, __( 'Clock Out:', 'team-time-log' ), $clock_out_date ) ?>
+	<?php date_input( 'clock_out_' . $entry_id, __( 'Clock Out:', 'team-time-log' ), $clock_out_date ) ?>
 </div>
 
 <?php } ?>

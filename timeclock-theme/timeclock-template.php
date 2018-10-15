@@ -7,17 +7,17 @@
  */
 ?>
 <!doctype html>
-<html <?= language_attributes(); ?>>
+<html <?php language_attributes(); ?>>
 <head>
-<meta charset="<?= bloginfo( 'charset' ); ?>">
+<meta charset="<?php bloginfo( 'charset' ); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
 <link rel="profile" href="http://gmpg.org/xfn/11">
-<link rel"pingback" href="<?= bloginfo( 'pingback_url' ); ?>">
+<link rel"pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
 
-<?= wp_head(); ?>
+<?php wp_head(); ?>
 </head>
 
-<body <?= body_class(); ?>>
+<body <?php body_class(); ?>>
 
 <div id="page" class="hfeed site">
 	<header id="masthead" class="site-header" role="banner">
@@ -28,24 +28,24 @@
 		<div class="col-full">
 			<form class="timeclock-form">
 				<label for="user-select">
-					<?= __( 'Select User:', 'team-time-log' ) ?>
+					<?php echo __( 'Select User:', 'team-time-log' ) ?>
 				</label>
 				<select>
 					<option name="user-select" value="" disabled="disabled" selected="selected">
-						<?= __( 'Select your name', 'team-time-log' ) ?>
+						<?php echo __( 'Select your name', 'team-time-log' ) ?>
 					</option>
-					<?= do_action( 'team-time-log_user_options' ) ?>
+					<?php do_action( 'team-time-log_user_options' ) ?>
 				</select>
 			</form>
 		</div> <!-- .col-full -->
 	</div> <!-- #content -->
 
 	<footer class="site-footer" role="contentinfo">
-		<span class="team-time-log-tagline"><?= __( 'Team Time Log', 'team-time-log' ) ?></span>
+		<span class="team-time-log-tagline"><?php echo __( 'Team Time Log', 'team-time-log' ) ?></span>
 	</footer>
 </div> <!-- #page -->
 
-<?= wp_footer(); ?>
+<?php wp_footer(); ?>
 
 </body>
 </html>

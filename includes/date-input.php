@@ -15,33 +15,33 @@ function date_input( $name, $display_name, $date_time ) {
 
 <fieldset>
 	<label>
-		<?= $display_name ?>
+		<?php echo $display_name ?>
 	</label>
 	<input
 		type="text"
-		name="<?= $name . '_date' ?>"
-		value="<?= esc_textarea( $date ) ?>"
+		name="<?php echo $name . '_date' ?>"
+		value="<?php echo esc_textarea( $date ) ?>"
 		class="team-time-log-datepicker"
-		aria-label="<?= __( 'Date', 'team-time-log' ) ?>"
+		aria-label="<?php echo __( 'Date', 'team-time-log' ) ?>"
 	/>
 	<input
 		type="number"
-		name="<?= $name . '_hour' ?>"
+		name="<?php echo $name . '_hour' ?>"
 		min="1"
 		max="24"
-		value="<?= esc_textarea( $hour ) ?>"
+		value="<?php echo esc_textarea( $hour ) ?>"
 		class="team-time-log-entry-hour"
-		aria-label="<?= __( 'Hour', 'team-time-log' ) ?>"
+		aria-label="<?php echo __( 'Hour', 'team-time-log' ) ?>"
 	/>
 	<span>:</span>
 	<input
 		type="text"
-		name="<?= $name . '_minute' ?>"
+		name="<?php echo $name . '_minute' ?>"
 		min="0"
 		max="59"
-		value="<?= esc_textarea( $minute ) ?>"
+		value="<?php echo esc_textarea( $minute ) ?>"
 		class="team-time-log-entry-minute"
-		aria-label="<?= __( 'Minute', 'team-time-log' ) ?>"
+		aria-label="<?php echo __( 'Minute', 'team-time-log' ) ?>"
 	/>
 </fieldset>
 

@@ -17,12 +17,12 @@ function admin_profile_fieldset( $pin_exists ) {
 	// TODO: JS Validate PIN input.
 
 ?>
-<h2><?= __( 'Team Time Log', 'team-time-log' ) ?></h2>
+<h2><?php echo __( 'Team Time Log', 'team-time-log' ) ?></h2>
 <table class="form-table">
 	<tr>
 		<th>
 			<label for="time-clock-pin">
-				<?= __( 'Time Clock PIN (4-digit)', 'team-time-log' ) ?>
+				<?php echo __( 'Time Clock PIN (4-digit)', 'team-time-log' ) ?>
 			</label>
 		</th>
 		<td>
@@ -33,7 +33,7 @@ function admin_profile_fieldset( $pin_exists ) {
 				minlength="4"
 				maxlength="4"
 				inputmode="numeric"
-				placeholder="<?= $placeholder ?>"
+				placeholder="<?php echo $placeholder ?>"
 			/>
 		</td>
 	</tr>
