@@ -27,33 +27,33 @@ include_once 'includes/timeclock.php';
 include_once 'timeclock-theme/class-timeclock-theme-loader.php';
 
 // TODO: Move admin stuff to another class and only include when needed.
-class TeamTimeLog {
+class Team_Time_Log {
 	public function __construct() {
 		$this->plugin_dir = plugin_dir_path( __FILE__ );
 	}
 
 	public function init() {
-		register_activation_hook( __FILE__, [ $this, 'activatePlugin' ] );
-		register_deactivation_hook( __FILE__, [ $this, 'deactivatePlugin' ] );
-		add_action( 'init', [ $this, 'registerPostType' ], 10, 3 );
-		add_action( 'admin_enqueue_scripts', [ $this, 'enqueueAdminScripts' ], 10 );
-		add_action( 'admin_enqueue_scripts', [ $this, 'enqueueAdminStyles' ], 10 );
-		add_filter( 'wp_insert_post_data', [ $this, 'setPostData' ], 10, 2 );
+		register_activation_hook( __FILE__, [ $this, 'activate_plugin' ] );
+		register_deactivation_hook( __FILE__, [ $this, 'deactivate_plugin' ] );
+		add_action( 'init', [ $this, 'register_post_type' ], 10, 3 );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ], 10 );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_styles' ], 10 );
+		add_filter( 'wp_insert_post_data', [ $this, 'set_post_data' ], 10, 2 );
 	}
 
-	public function activatePlugin() {
+	public function activate_plugin() {
 		$timeclock_slug = esc_sql( _x( 'time-clock', 'Page slug', 'team-time-log' ) );
 		$timeclock_title = _x( 'Time Clock', 'Page title', 'team-time-log' );
 
 		create_page( $timeclock_slug, 'team-time-log_timeclock_page_id', $timeclock_title );
 	}
 
-	public function deactivatePlugin() {
+	public function deactivate_plugin() {
 		trash_page( 'team-time-log_timeclock_page_id' );
 	}
 
 	// TODO: Move out of main plugin file.
-	function registerPostType() {
+	function register_post_type() {
 		$labels = array(
 			'name'                  => _x( 'Time Log Entries', 'Post type general name', 'textdomain' ),
 			'singular_name'         => _x( 'Time Log Entry', 'Post type singular name', 'textdomain' ),
@@ -89,25 +89,25 @@ class TeamTimeLog {
 			'menu_icon'          => 'dashicons-clock',
 			'supports'           => array( 'author' ),
 			'delete_with_user'   => true,
-			'register_meta_box_cb' => [ $this, 'registerMetaBox' ],
+			'register_meta_box_cb' => [ $this, 'register_meta_box' ],
 		);
 	 
 		register_post_type( 'time-log-entry', $args );
 	}
 
 	// TODO: Move out of main plugin file.
-	function registerMetaBox() {
+	function register_meta_box() {
 		add_meta_box(
 			'team_time_log_entry_times',
 			'Clock In/Out',
-			[ $this, 'metaBoxCallback' ],
+			[ $this, 'meta_box_callback' ],
 			'time-log-entry',
 			'normal',
 			'default'
 		);
 	}
 
-	function enqueueAdminScripts() {
+	function enqueue_admin_scripts() {
 		wp_enqueue_script(
 			'team-time-log-admin', 
 			plugin_dir_url( __FILE__ ) . 'js/team-time-log-admin.js',
@@ -117,7 +117,7 @@ class TeamTimeLog {
 		);
 	}
 
-	function enqueueAdminStyles() {
+	function enqueue_admin_styles() {
 		wp_enqueue_style(
 			'team-time-log-admin-jquery-ui',
 			plugin_dir_url( __FILE__ ) . 'styles/jquery-ui/jquery-ui.css'
@@ -132,12 +132,12 @@ class TeamTimeLog {
 	}
 
 	// TODO: Move out of main plugin file.
-	function metaBoxCallback( $entry ) {
+	function meta_box_callback( $entry ) {
 		entry_metabox( $entry );
 	}
 
 	// TODO: Move out of main plugin file.
-	function setPostData( $data, $postarr ) {
+	function set_post_data( $data, $postarr ) {
 		$id = $postarr['ID'];
 		if ( 'time-log-entry' === $data['post_type'] ) {
 			$data['post_name'] = get_entry_name( $postarr );
@@ -172,5 +172,5 @@ class TeamTimeLog {
 	}
 }
 
-$team_time_log = new TeamTimeLog();
+$team_time_log = new Team_Time_Log();
 $team_time_log->init();

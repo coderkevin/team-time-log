@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) or die();
 
 include_once 'admin-user-profile-fieldset.php';
 
-class AdminProfile {
+class Admin_Profile {
 	public function init() {
 		add_action( 'show_user_profile', array( $this, 'add_pin_field' ) );
 		add_action( 'edit_user_profile', array( $this, 'add_pin_field' ) );
@@ -46,5 +46,5 @@ class AdminProfile {
 	}
 }
 
-$admin_profile = new AdminProfile();
+$admin_profile = new Admin_Profile();
 $admin_profile->init();
