@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) or die();
 class Timeclock {
 	public function init() {
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		add_action( 'team-time-log_timeclock_header', [ $this, 'enqueue_user_data' ] );
 		add_action( 'team-time-log_timeclock_header', [ $this, 'process_post' ] );
 		add_action( 'team-time-log_user_options', [ $this, 'render_user_options' ] );
 	}
@@ -42,6 +43,26 @@ class Timeclock {
 				echo '<option value="' . $id . '">' . $name . '</option>';
 			}
 		}
+	}
+
+	public function enqueue_user_data() {
+		$user_query = new \WP_User_Query( [ 'role__in' => [ 'Administrator', 'Editor', 'Author'] ] );
+		$users = $user_query->get_results();
+		$user_info = [];
+
+		if ( ! empty( $users ) ) {
+			foreach( $users as $user ) {
+				$user_id = $user->ID;
+				$user_info[ $user_id ] = [
+					'clocked_in' => is_clocked_in( $user_id ),
+				];
+			}
+		}
+
+		wp_add_inline_script(
+			'timeclock-form',
+			'var timeclock_user_info =' . json_encode( $user_info )
+		);
 	}
 
 	public function process_post() {

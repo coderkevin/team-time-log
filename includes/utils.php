@@ -34,13 +34,49 @@ function datetime_to_database_string( $datetime, $format = 'Y-m-d H:i:s' ) {
 }
 
 function get_entry_title( $data ) {
-	$author = get_user_by( 'id', $data['post_author'] );
-	return $data['post_date'] . ' - ' . $author->data->display_name;
+	$author_name = 'unknown';
+	$clock_in = datetime_to_database_string( new \DateTime() );
+
+	if ( array_key_exists( 'post_author', $data ) ) {
+		$author = get_user_by( 'id', $data['post_author'] );
+		$author_name = $author->data->display_name;
+	}
+	if ( array_key_exists( 'post_date', $data ) ) {
+		$clock_in = $data['post_date'];
+	}
+	return $clock_in . ' - ' . $author_name;
 }
 
 function get_entry_name( $data ) {
-	$author = get_user_by( 'id', $data['post_author'] );
-	return 'time-entry-' . $author->data->user_login . '-' . $data['ID'];
+	$author_login = 'unknown';
+	$entry_id = 0;
+
+	if ( array_key_exists( 'post_author', $data ) ) {
+		$author = get_user_by( 'id', $data['post_author'] );
+		$author_login = $author->data->user_login;
+	}
+	if ( array_key_exists( 'ID', $data ) ) {
+		$entry_id = $data['ID'];
+	}
+	return 'time-entry-' . $author_login . '-' . $entry_id;
+}
+
+function is_clocked_in( $user_id ) {
+	$query = new \WP_Query( [ 'post_type' => 'time-log-entry', 'author' => $user_id ] );
+
+	// Check this user's time log entries for an active one.
+	if ( $query->have_posts() ) {
+		foreach( $query->posts as $entry ) {
+			if ( is_entry_active( $entry ) ) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+function is_entry_active( $entry ) {
+	return $entry->post_date_gmt === $entry->post_modified_gmt;
 }
 
 function is_valid_page( $page ) {

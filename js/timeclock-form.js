@@ -4,7 +4,17 @@
  * - Keypad buttons edit the user pin field
  */
 
-jQuery( '.keypad-button' ).on( "click", ( event ) => {
+jQuery( document ).ready( () => {
+	// Default to no user.
+	updateForm( -1 );
+} );
+
+jQuery( '#timeclock-user-select' ).on( 'change', ( event ) => {
+	const userId = jQuery( '#timeclock-user-select' ).val();
+	updateForm( userId );
+} );
+
+jQuery( '.keypad-button' ).on( 'click', ( event ) => {
 	event.preventDefault();
 	const previousPin = jQuery( '#user-pin' ).val();
 	const buttonValue = event.target.value;
@@ -21,4 +31,15 @@ function updatePin( previousPin, buttonValue ) {
 		default:
 			return previousPin + buttonValue;
 	}
+}
+
+function updateForm( userId ) {
+	const userInfo = timeclock_user_info && timeclock_user_info[ userId ] || null;
+	const userSelected = null !== userInfo;
+	const clockedIn = userSelected && userInfo.clocked_in;
+
+	jQuery( '#user-pin' ).attr( 'disabled', ! userSelected );
+	jQuery( '.keypad-button' ).attr( 'disabled', ! userSelected );
+	jQuery( '#timeclock-clock-in' ).attr( 'disabled', clockedIn );
+	jQuery( '#timeclock-clock-out' ).attr( 'disabled', ! clockedIn );
 }

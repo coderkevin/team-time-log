@@ -29,7 +29,7 @@
 		<div class="col-full">
 			<form id="timeclock-form" method="post" autocomplete="false">
 				<fieldset>
-					<select name="user-select">
+					<select id="timeclock-user-select" name="user-select">
 						<option value="" disabled="disabled" selected="selected">
 							<?php echo __( 'Select your name', 'team-time-log' ) ?>
 						</option>
@@ -73,10 +73,10 @@
 
 				<fieldset>
 					<div class="timeclock-submit">
-						<button name="submit" type="submit" form="timeclock-form" value="in">
+						<button id="timeclock-clock-in" name="submit" type="submit" form="timeclock-form" value="in">
 							<?php echo __( 'IN', 'team-time-log' ); ?>
 						</button>
-						<button name="submit" type="submit" form="timeclock-form" value="out">
+						<button id="timeclock-clock-out" name="submit" type="submit" form="timeclock-form" value="out">
 							<?php echo __( 'OUT', 'team-time-log' ); ?>
 						</button>
 					</div>
