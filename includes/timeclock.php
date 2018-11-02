@@ -67,8 +67,51 @@ class Timeclock {
 
 	public function process_post() {
 		if ( ! empty( $_POST ) ) {
-			error_log( 'process_post' );
-			error_log( 'POST: ' . print_r( $_POST, true ) );
+			switch( $_POST['submit'] ) {
+				case 'in':
+					return $this->clock_in();
+				case 'out':
+					return $this->clock_out();
+				default:
+					error_log( 'timeclock: Unrecognized post submit: ' . $_POST['submit'] );
+					return;
+			}
+		}
+	}
+
+	public function clock_in() {
+		$this->verify_unauthenticated_timeclock_post();
+
+		$user = get_user_by( 'ID', $_POST['user-select'] );
+
+		error_log( 'Clock IN: ' . $user->data->display_name );
+	}
+
+	public function clock_out() {
+		$this->verify_unauthenticated_timeclock_post();
+
+		$user = get_user_by( 'ID', $_POST['user-select'] );
+
+		error_log( 'Clock OUT: ' . $user->data->display_name );
+	}
+
+	private function verify_unauthenticated_timeclock_post() {
+		$user = get_user_by( 'ID', $_POST['user-select'] );
+
+		if ( ! $user->has_cap( 'publish_posts' ) ) {
+			wp_die( _( 'Insufficient permissions for user.' ) );
+		}
+
+		$nonce_verified = isset( $_POST[ 'timeclock-form' ] ) &&
+			wp_verify_nonce( $_POST[ 'timeclock-form' ], 'timeclock_in_or_out');
+		if ( ! $nonce_verified ) {
+			wp_nonce_ays( 'timeclock_in_or_out');
+		}
+
+		$pin_hash = get_user_meta( $user->ID, 'team_time_log_pin', true );
+		$pin_verified = wp_check_password( $_POST[ 'user-pin' ], $pin_hash, $user->ID );
+		if ( ! $pin_verified ) {
+			wp_die( _( 'Incorrect PIN for user.', 'team-time-log' ) );
 		}
 	}
 }

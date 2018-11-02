@@ -28,6 +28,7 @@
 	<div id="content" class="site-content" tabindex="-1">
 		<div class="col-full">
 			<form id="timeclock-form" method="post" autocomplete="false">
+				<?php wp_nonce_field( 'timeclock_in_or_out', 'timeclock-form' ); ?>
 				<fieldset>
 					<select id="timeclock-user-select" name="user-select">
 						<option value="" disabled="disabled" selected="selected">
