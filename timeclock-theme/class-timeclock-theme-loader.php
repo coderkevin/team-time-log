@@ -34,17 +34,8 @@ class Timeclock_Theme_Loader {
 	}
 
 	public function view_template( $template ) {
-		if ( is_search() ) {
-			return $template;
-		}
-
-		global $post;
-
-		if ( ! $post ) {
-			return $template;
-		}
-
-		if ( array_key_exists( $post->post_name, $this->page_templates ) ) {
+		if ( $this->is_my_page() ) {
+			global $post;
 			$page_template = $this->page_templates[ $post->post_name ];
 			$file = plugin_dir_path( __FILE__ ) . $page_template;
 
@@ -53,16 +44,22 @@ class Timeclock_Theme_Loader {
 			} else {
 				echo $file;
 			}
-
-			return $template;
 		}
+		return $template;
 	}
 
 	public function enqueue_styles() {
-		foreach( $this->styles as $handle => $src ) {
-			$file = plugin_dir_url( __FILE__ ) . $src;
-			wp_enqueue_style( $handle, $file, false, time() /* TODO: use filemtime */ );
+		if ( $this->is_my_page() ) {
+			foreach( $this->styles as $handle => $src ) {
+				$file = plugin_dir_url( __FILE__ ) . $src;
+				wp_enqueue_style( $handle, $file, false, time() /* TODO: use filemtime */ );
+			}
 		}
+	}
+
+	private function is_my_page() {
+		global $post;
+		return ! is_search() && $post && array_key_exists( $post->post_name, $this->page_templates );
 	}
 }
 
