@@ -25,54 +25,30 @@ function inputs_to_datetime( $date, $hour, $minute ) {
 	return \DateTime::createFromFormat( get_time_format(), $str );
 }
 
-function database_string_to_datetime( $str, $format = 'Y-m-d H:i:s' ) {
+function datestring_to_datetime( $str, $format = 'Y-m-d H:i:s' ) {
 	return \DateTime::createFromFormat( $format, $str );
 }
 
-function datetime_to_database_string( $datetime, $format = 'Y-m-d H:i:s' ) {
+function datetime_to_datestring( $datetime, $format = 'Y-m-d H:i:s' ) {
 	return $datetime->format( $format );
 }
 
-function get_entry_title( $data ) {
-	$author_name = 'unknown';
-	$clock_in = datetime_to_database_string( new \DateTime() );
-
-	if ( array_key_exists( 'post_author', $data ) ) {
-		$author = get_user_by( 'id', $data['post_author'] );
-		$author_name = $author->data->display_name;
-	}
-	if ( array_key_exists( 'post_date', $data ) ) {
-		$clock_in = $data['post_date'];
-	}
-	return $clock_in . ' - ' . $author_name;
-}
-
-function get_entry_name( $data ) {
-	$author_login = 'unknown';
-	$entry_id = 0;
-
-	if ( array_key_exists( 'post_author', $data ) ) {
-		$author = get_user_by( 'id', $data['post_author'] );
-		$author_login = $author->data->user_login;
-	}
-	if ( array_key_exists( 'ID', $data ) ) {
-		$entry_id = $data['ID'];
-	}
-	return 'time-entry-' . $author_login . '-' . $entry_id;
-}
-
 function is_clocked_in( $user_id ) {
+	return get_current_time_entry( $user_id ) !== null;
+}
+
+function get_current_time_entry( $user_id ) {
 	$query = new \WP_Query( [ 'post_type' => 'time-log-entry', 'author' => $user_id ] );
 
 	// Check this user's time log entries for an active one.
 	if ( $query->have_posts() ) {
 		foreach( $query->posts as $entry ) {
 			if ( is_entry_active( $entry ) ) {
-				return true;
+				return $entry;
 			}
 		}
 	}
-	return false;
+	return null;
 }
 
 function is_entry_active( $entry ) {
@@ -95,10 +71,8 @@ function create_page( $slug, $option, $title ) {
 
 	// If there's already a page, just update the option and return it.
 	if ( is_valid_page( $page ) ) {
-		if ( is_valid_page( $page ) ) {
-			update_option( $option, $page->ID );
-			return $page->ID;
-		}
+		update_option( $option, $page->ID );
+		return $page->ID;
 	}
 
 	// If the page exists, but isn't in the right state (e.g. trashed), restore it.

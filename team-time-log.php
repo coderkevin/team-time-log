@@ -21,6 +21,7 @@ namespace coderkevin\TeamTimeLog;
 defined( 'ABSPATH' ) or die();
 
 include_once 'includes/utils.php';
+include_once 'includes/handle_post_data.php';
 include_once 'includes/entry-metabox.php';
 include_once 'includes/admin/class-admin-user-profile.php';
 include_once 'includes/timeclock.php';
@@ -38,7 +39,7 @@ class Team_Time_Log {
 		add_action( 'init', [ $this, 'register_post_type' ], 10, 3 );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ], 10 );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_styles' ], 10 );
-		add_filter( 'wp_insert_post_data', [ $this, 'set_post_data' ], 10, 2 );
+		add_filter( 'wp_insert_post_data', 'coderkevin\TeamTimeLog\handle_post_data', 10, 2 );
 	}
 
 	public function activate_plugin() {
@@ -134,41 +135,6 @@ class Team_Time_Log {
 	// TODO: Move out of main plugin file.
 	function meta_box_callback( $entry ) {
 		entry_metabox( $entry );
-	}
-
-	// TODO: Move out of main plugin file.
-	function set_post_data( $data, $postarr ) {
-		$id = $postarr['ID'];
-		if ( 'time-log-entry' === $data['post_type'] ) {
-			$data['post_name'] = get_entry_name( $postarr );
-			$data['post_title'] = get_entry_title( $postarr );
-
-			// If we have a valid ID, set the clock in/out dates.
-			if ( $id ) {
-				// TODO: Use time zone/GMT for this.
-				$clock_in_date = inputs_to_datetime(
-					$_POST[ 'clock_in_' . $id . '_date' ],
-					$_POST[ 'clock_in_' . $id . '_hour' ],
-					$_POST[ 'clock_in_' . $id . '_minute' ]
-				);
-				$clock_in_str = datetime_to_database_string( $clock_in_date );
-
-				$clock_out_date = inputs_to_datetime(
-					$_POST[ 'clock_out_' . $id . '_date' ],
-					$_POST[ 'clock_out_' . $id . '_hour' ],
-					$_POST[ 'clock_out_' . $id . '_minute' ]
-				);
-				$clock_out_str = datetime_to_database_string( $clock_out_date );
-
-				// TODO: convert local/GMT
-				$data['post_date'] = $clock_in_str;
-				$data['post_date_gmt'] = $clock_in_str;
-				$data['post_modified'] = $clock_out_str;
-				$data['post_modified_gmt'] = $clock_out_str;
-			}
-			return $data;
-		}
-		return $data;
 	}
 }
 

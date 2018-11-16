@@ -74,10 +74,10 @@
 
 				<fieldset>
 					<div class="timeclock-submit">
-						<button id="timeclock-clock-in" name="submit" type="submit" form="timeclock-form" value="in">
+						<button id="timeclock-clock-in" name="action" type="submit" form="timeclock-form" value="clock_in">
 							<?php echo __( 'IN', 'team-time-log' ); ?>
 						</button>
-						<button id="timeclock-clock-out" name="submit" type="submit" form="timeclock-form" value="out">
+						<button id="timeclock-clock-out" name="action" type="submit" form="timeclock-form" value="clock_out">
 							<?php echo __( 'OUT', 'team-time-log' ); ?>
 						</button>
 					</div>
