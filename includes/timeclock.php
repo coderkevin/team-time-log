@@ -25,7 +25,7 @@ class Timeclock {
 			wp_enqueue_script(
 				'timeclock-form', 
 				plugin_dir_url( __FILE__ ) . '../js/timeclock-form.js',
-				[],
+				[ 'jquery' ],
 				time(), // TODO: use filemtime
 				true
 			);
@@ -102,8 +102,8 @@ class Timeclock {
 			wp_die( _( 'Insufficient permissions for user.' ) );
 		}
 
-		$nonce_verified = isset( $_POST[ 'timeclock-form' ] ) &&
-			wp_verify_nonce( $_POST[ 'timeclock-form' ], 'timeclock_in_or_out');
+		$nonce_verified = isset( $_POST[ 'timeclock-form-submit' ] ) &&
+			wp_verify_nonce( $_POST[ 'timeclock-form-submit' ], 'timeclock_in_or_out');
 		if ( ! $nonce_verified ) {
 			wp_nonce_ays( 'timeclock_in_or_out');
 		}
