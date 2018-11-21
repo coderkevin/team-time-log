@@ -98,7 +98,15 @@ function set_entry_data( $data, $author_id, $clock_in_gmt, $clock_out_gmt ) {
 }
 
 function calculate_entry_title( $author_name, $clock_in_gmt, $clock_out_gmt ) {
-	$time_elapsed = human_time_diff( strtotime( $clock_in_gmt ), strtotime( $clock_out_gmt ) );
+	$time_in = strtotime( $clock_in_gmt );
+	$time_out = strtotime( $clock_out_gmt );
+	$date = date( 'M jS, Y', $time_in );
 
-	return $author_name . ': ' . $time_elapsed;
+	if ( $time_in === $time_out ) {
+		$time_diff = __( 'not clocked out', 'team-time-log' );
+	} else {
+		$time_diff = human_time_diff( $time_in, $time_out );
+	}
+
+	return $author_name . ': ' . $date . ' - ' . $time_diff;
 }
