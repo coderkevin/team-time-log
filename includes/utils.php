@@ -12,6 +12,9 @@ namespace coderkevin\TeamTimeLog;
 
 defined( 'ABSPATH' ) or die();
 
+// Entries are consider expired if they're older than 24 hours.
+define( 'ENTRY_EXPIRED_TIME', ( 60 * 60 * 24 ) );
+
 function get_date_format() {
 	return get_option( 'date_format' );
 }
@@ -43,7 +46,7 @@ function get_current_time_entry( $user_id ) {
 	// Check this user's time log entries for an active one.
 	if ( $query->have_posts() ) {
 		foreach( $query->posts as $entry ) {
-			if ( is_entry_active( $entry ) ) {
+			if ( is_entry_active( $entry->post_date_gmt, $entry->post_modified_gmt ) ) {
 				return $entry;
 			}
 		}
@@ -51,8 +54,12 @@ function get_current_time_entry( $user_id ) {
 	return null;
 }
 
-function is_entry_active( $entry ) {
-	return $entry->post_date_gmt === $entry->post_modified_gmt;
+function is_entry_active( $clock_in_gmt, $clock_out_gmt ) {
+	if ( $clock_in_gmt === $clock_out_gmt ) {
+		$time_ago = time() - strtotime( $clock_in_gmt );
+		return ENTRY_EXPIRED_TIME > $time_ago;
+	}
+	return false;
 }
 
 function is_valid_page( $page ) {
