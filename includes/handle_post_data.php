@@ -98,8 +98,7 @@ function set_entry_data( $data, $author_id, $clock_in_gmt, $clock_out_gmt ) {
 }
 
 function calculate_entry_title( $author_name, $clock_in_gmt, $clock_out_gmt ) {
-	// TODO: Create text string for time elapsed.
-	$time_elapsed = 'some amount of time';
+	$time_elapsed = human_time_diff( strtotime( $clock_in_gmt ), strtotime( $clock_out_gmt ) );
 
 	return $author_name . ': ' . $time_elapsed;
 }
