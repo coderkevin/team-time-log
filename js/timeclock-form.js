@@ -5,8 +5,8 @@
  */
 
 jQuery( document ).ready( () => {
-	// Default to no user.
-	updateForm( -1 );
+	const userId = jQuery( '#timeclock-user-select' ).val();
+	updateForm( userId );
 } );
 
 jQuery( '#timeclock-user-select' ).on( 'change', ( event ) => {
@@ -34,7 +34,7 @@ function updatePin( previousPin, buttonValue ) {
 }
 
 function updateForm( userId ) {
-	const userInfo = timeclock_user_info && timeclock_user_info[ userId ] || null;
+	const userInfo = userId && timeclock_user_info && timeclock_user_info[ userId ] || null;
 	const userSelected = null !== userInfo;
 	const clockedIn = userSelected && userInfo.clocked_in;
 

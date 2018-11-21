@@ -24,6 +24,11 @@ class Admin_Profile {
 	}
 
 	public function add_pin_field( $user ) {
+		if ( ! current_user_can( 'publish_posts' ) ) {
+			// User must be able to publish posts to make time entries.
+			return;
+		}
+
 		$user_id = $user->ID;
 		if ( wp_get_current_user()->ID === $user_id || current_user_can( 'edit_user' ) ) {
 			$pin_hash = get_user_meta( $user_id, 'team_time_log_pin', true );
@@ -34,6 +39,11 @@ class Admin_Profile {
 	}
 
 	public function save_pin_field( $user_id ) {
+		if ( ! current_user_can( 'publish_posts' ) ) {
+			// User must be able to publish posts to make time entries.
+			return;
+		}
+
 		if ( wp_get_current_user()->ID === $user_id || current_user_can( 'edit_user' ) ) {
 			// TODO: Validate raw pin.
 			$raw_pin = $_POST[ 'time-clock-pin' ];

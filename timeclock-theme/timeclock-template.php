@@ -29,56 +29,19 @@
 		<div class="col-full">
 			<form id="timeclock-form" method="post" autocomplete="false">
 				<?php wp_nonce_field( 'timeclock_in_or_out', 'timeclock-form-submit' ); ?>
-				<fieldset>
-					<select id="timeclock-user-select" name="user-select">
-						<option value="" disabled="disabled" selected="selected">
-							<?php echo __( 'Select your name', 'team-time-log' ) ?>
-						</option>
-						<?php do_action( 'team-time-log_user_options' ); ?>
-					</select>
-				</fieldset>
+				<?php do_action( 'team-time-log_user_select' ); ?>
 
-				<fieldset>
-					<input
-						id="user-pin"
-						type="password"
-						name="user-pin"
-						size="4"
-						minlength="4"
-						maxlength="4"
-						inputmode="numeric"
-						autocomplete="false"
-					/>
-				</fieldset>
+				<?php do_action( 'team-time-log_user_pin' ); ?>
 
-				<fieldset>
-					<div id="timeclock-keypad">
-						<button class="keypad-button" value="1">1</button>
-						<button class="keypad-button" value="2">2</button>
-						<button class="keypad-button" value="3">3</button>
-						<button class="keypad-button" value="4">4</button>
-						<button class="keypad-button" value="5">5</button>
-						<button class="keypad-button" value="6">6</button>
-						<button class="keypad-button" value="7">7</button>
-						<button class="keypad-button" value="8">8</button>
-						<button class="keypad-button" value="9">9</button>
-						<button class="keypad-button" value="clear">
-							<?php echo __( 'CLR', 'team-time-log' ); ?>
-						</button>
-						<button class="keypad-button" value="0">0</button>
-						<button class="keypad-button" value="backspace">
-							<?php echo __( '<', 'team-time-log' ); ?>
-						</button>
-					</div-button>
-				</fieldset>
+				<?php do_action( 'team-time-log_keypad' ); ?>
 
 				<fieldset>
 					<div class="timeclock-submit">
 						<button id="timeclock-clock-in" name="action" type="submit" form="timeclock-form" value="clock_in">
-							<?php echo __( 'IN', 'team-time-log' ); ?>
+							<?php echo __( 'Clock IN', 'team-time-log' ); ?>
 						</button>
 						<button id="timeclock-clock-out" name="action" type="submit" form="timeclock-form" value="clock_out">
-							<?php echo __( 'OUT', 'team-time-log' ); ?>
+							<?php echo __( 'Clock OUT', 'team-time-log' ); ?>
 						</button>
 					</div>
 				</fieldset>
