@@ -24,7 +24,7 @@ class Admin_Profile {
 	}
 
 	public function add_pin_field( $user ) {
-		if ( ! current_user_can( 'publish_posts' ) ) {
+		if ( ! user_can( $user, 'publish_posts' ) ) {
 			// User must be able to publish posts to make time entries.
 			return;
 		}
