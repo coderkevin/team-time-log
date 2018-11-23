@@ -59,7 +59,8 @@ class Timeclock {
 
 	private function render_single_user_select() {
 		$user = wp_get_current_user();
-		$name = esc_html( $user->data->display_name );
+		$status = is_clocked_in( $user->ID ) ? _( '(clocked in)', 'team-time-log' ) : '';
+		$name = esc_html( $user->data->display_name ) . ' ' . $status;
 		echo( '<label id="timeclock-single-user-select">' . $name . '</label>' );
 		echo( '<input id="timeclock-user-select" name="user-select" type="hidden" value="' . $user->ID . '" />' );
 	}
@@ -77,7 +78,8 @@ class Timeclock {
 
 			foreach( $users as $user ) {
 				$id = $user->ID;
-				$name = esc_html( $user->data->display_name );
+				$status = is_clocked_in( $user->ID ) ? _( '[in]', 'team-time-log' ) : '';
+				$name = esc_html( $user->data->display_name ) . ' ' . $status;
 				echo '    <option value="' . $id . '">' . $name . '</option>';
 			}
 			echo( '  </select>' );
