@@ -39,16 +39,16 @@ function handle_admin_edit( $data, $postarr, $params ) {
 		$params[ 'clock_in_' . $id . '_hour' ],
 		$params[ 'clock_in_' . $id . '_minute' ]
 	);
-	$clock_in_str = datetime_to_datestring( $clock_in_date );
+	$clock_in_gmt = get_gmt_from_date( datetime_to_datestring( $clock_in_date ) );
 
 	$clock_out_date = inputs_to_datetime(
 		$params[ 'clock_out_' . $id . '_date' ],
 		$params[ 'clock_out_' . $id . '_hour' ],
 		$params[ 'clock_out_' . $id . '_minute' ]
 	);
-	$clock_out_str = datetime_to_datestring( $clock_out_date );
+	$clock_out_gmt = get_gmt_from_date( datetime_to_datestring( $clock_out_date ) );
 
-	return set_entry_data( $data, $author_id, $clock_in_str, $clock_out_str );;
+	return set_entry_data( $data, $author_id, $clock_in_gmt, $clock_out_gmt );;
 }
 
 function handle_clock_in( $data, $postarr ) {
@@ -88,11 +88,9 @@ function set_entry_data( $data, $author_id, $clock_in_gmt, $clock_out_gmt ) {
 	$data[ 'post_author' ] = $author_id;
 	$data[ 'post_name' ] = 'time-entry-' . $author_login . '-' . $entry_id;
 	$data[ 'post_title' ] = calculate_entry_title( $author_name, $clock_in_gmt, $clock_out_gmt );
-	// TODO: convert local/GMT
-	$data['post_date'] = $clock_in_gmt;
+	$data['post_date'] = get_date_from_gmt( $clock_in_gmt );
 	$data['post_date_gmt'] = $clock_in_gmt;
-	// TODO: convert local/GMT
-	$data['post_modified'] = $clock_out_gmt;
+	$data['post_modified'] = get_date_from_gmt( $clock_out_gmt );
 	$data['post_modified_gmt'] = $clock_out_gmt;
 	return $data;
 }

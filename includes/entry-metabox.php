@@ -5,8 +5,8 @@ include_once 'date-input.php';
 
 function entry_metabox( $entry ) {
 	$entry_id = $entry->ID;
-	$clock_in_str = $entry->post_date;
-	$clock_out_str = $entry->post_modified;
+	$clock_in_str = get_date_from_gmt( $entry->post_date_gmt );
+	$clock_out_str = get_date_from_gmt( $entry->post_modified_gmt );
 	$clock_in_date = datestring_to_datetime( $clock_in_str );
 	$clock_out_date = datestring_to_datetime( $clock_out_str );
 ?>
