@@ -223,7 +223,7 @@ class Timeclock {
 				case 'clock_out':
 					return $this->clock_out();
 				default:
-					error_log( 'timeclock: Unrecognized action: ' . $_POST['action'] );
+					error_log( 'team-time-log: Unrecognized action: ' . $_POST['action'] );
 					die(); // Possible security issue, give no information to user.
 			}
 		}
@@ -247,7 +247,7 @@ class Timeclock {
 			return true;
 		} else {
 			$this->set_notification( _( 'Error on clock in' , 'team-time-log' ), true );
-			error_log( 'Error on user ' . $user_id . ' clock in (wp_insert_post)' );
+			error_log( 'team-time-log: Error on user ' . $user_id . ' clock in (wp_insert_post)' );
 			return false;
 		}
 	}
@@ -257,23 +257,29 @@ class Timeclock {
 		$user = get_user_by( 'ID', $user_id );
 		$name = $user->data->display_name;
 		$summary = $_POST['summary'];
-
 		$entry = get_current_time_entry( $user_id );
-		$entry->post_content = $summary;
+
+		$data = [
+			'ID' => $entry->ID,
+			'post_content' => $summary,
+		];
 
 		if ( $entry ) {
-			if ( wp_update_post( $entry ) > 0 ) {
+			if ( 0 === strlen( $summary ) ) {
+				$this->set_notification( __( 'Summary is mandatory', 'team-time-log' ), true );
+				return false;
+			}
+
+			if ( wp_update_post( $data ) > 0 ) {
 				$this->set_notification( $name . _( ' has clocked out' , 'team-time-log' ) );
 				return true;
 			} else {
 				$this->set_notification( _( 'Error on clock out' , 'team-time-log' ), true );
-				error_log( 'Error on user ' . $user_id . ' clock in (wp_update_post)' );
+				error_log( 'team-time_log: Error on user ' . $user_id . ' clock in (wp_update_post)' );
 			}
 		}
-		wp_die( _( 'User is not clocked in.', 'team-time-log' ) );
-
 		$this->set_notification( $name . _( ' was not clocked in' , 'team-time-log' ), true );
-		return true;
+		return false;
 	}
 
 	private function verify_authenticated_timeclock_post() {

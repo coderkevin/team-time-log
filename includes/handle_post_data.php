@@ -22,7 +22,7 @@ function handle_post_data( $data, $postarr ) {
 			case 'clock_out':
 				return handle_clock_out( $data, $postarr );
 			default:
-				error_log( 'Unrecognized action: ' . $params['action'] );
+				error_log( 'team-time-log: Unrecognized action: ' . $params['action'] );
 				die(); // Possible security issue, give no information to user.
 		}
 	}
@@ -47,8 +47,7 @@ function handle_admin_edit( $data, $postarr, $params ) {
 		$params[ 'clock_out_' . $id . '_minute' ]
 	);
 	$clock_out_gmt = get_gmt_from_date( datetime_to_datestring( $clock_out_date ) );
-
-	$summary = $params['summary'];
+	$summary = isset( $params['summary'] ) ? $params['summary'] : '';
 
 	return set_entry_data( $data, $author_id, $clock_in_gmt, $clock_out_gmt, $summary );
 }
@@ -57,14 +56,16 @@ function handle_clock_in( $data, $postarr ) {
 	$author_id = $data['post_author'];
 	$clock_in_gmt = current_time( 'Y-m-d H:i:s', true );
 	$clock_out_gmt = $clock_in_gmt;
-	return set_entry_data( $data, $author_id, $clock_in_gmt, $clock_out_gmt );
+	$summary = isset( $data['post_content'] ) ? $data['post_content'] : '';
+	return set_entry_data( $data, $author_id, $clock_in_gmt, $clock_out_gmt, $summary );
 }
 
 function handle_clock_out( $data, $postarr ) {
 	$author_id = $data['post_author'];
 	$clock_in_gmt = $data['post_date_gmt'];
 	$clock_out_gmt = current_time( 'Y-m-d H:i:s', true );
-	return set_entry_data( $data, $author_id, $clock_in_gmt, $clock_out_gmt );
+	$summary = isset( $data['post_content'] ) ? $data['post_content'] : '';
+	return set_entry_data( $data, $author_id, $clock_in_gmt, $clock_out_gmt, $summary );
 }
 
 function set_entry_data( $data, $author_id, $clock_in_gmt, $clock_out_gmt, $summary = '' ) {
