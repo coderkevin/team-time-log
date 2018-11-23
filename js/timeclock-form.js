@@ -5,9 +5,8 @@
  */
 
 jQuery( document ).ready( () => {
-	const userId = jQuery( '#timeclock-user-select' ).val();
+	updateForm( );
 
-	updateForm( userId );
 	if ( window.timeclock_notification ) {
 		const message = window.timeclock_notification.message;
 		const isError = window.timeclock_notification.isError;
@@ -29,8 +28,11 @@ jQuery( document ).ready( () => {
 } );
 
 jQuery( '#timeclock-user-select' ).on( 'change', ( event ) => {
-	const userId = jQuery( '#timeclock-user-select' ).val();
-	updateForm( userId );
+	updateForm();
+} );
+
+jQuery( '#user-pin' ).on( 'input', () => {
+	updateForm();
 } );
 
 jQuery( '.keypad-button' ).on( 'click', ( event ) => {
@@ -38,7 +40,7 @@ jQuery( '.keypad-button' ).on( 'click', ( event ) => {
 	const previousPin = jQuery( '#user-pin' ).val();
 	const buttonValue = event.target.value;
 	const pin = updatePin( previousPin, buttonValue );
-	jQuery( '#user-pin' ).val( pin );
+	jQuery( '#user-pin' ).val( pin ).trigger( 'input' );
 } );
 
 function updatePin( previousPin, buttonValue ) {
@@ -52,15 +54,21 @@ function updatePin( previousPin, buttonValue ) {
 	}
 }
 
-function updateForm( userId ) {
+function updateForm() {
+	const userId = jQuery( '#timeclock-user-select' ).val();
 	const userInfo = userId && timeclock_user_info && timeclock_user_info[ userId ] || null;
 	const userSelected = null !== userInfo;
+	const userAuthed = 'hidden' === jQuery( '#timeclock-user-select' ).attr('type');
 	const clockedIn = userSelected && userInfo.clocked_in;
+	const pinEntered = userAuthed ? true : jQuery( '#user-pin' ).val().length >= 4;
+
+	const canClockIn = ! clockedIn && userSelected && pinEntered;
+	const canClockOut = clockedIn && userSelected && pinEntered;
 
 	jQuery( '#user-pin' ).attr( 'disabled', ! userSelected );
 	jQuery( '.keypad-button' ).attr( 'disabled', ! userSelected );
-	jQuery( '#timeclock-clock-in' ).attr( 'disabled', clockedIn );
-	jQuery( '#timeclock-clock-out' ).attr( 'disabled', ! clockedIn );
+	jQuery( '#timeclock-clock-in' ).attr( 'disabled', ! canClockIn );
+	jQuery( '#timeclock-clock-out' ).attr( 'disabled', ! canClockOut );
 }
 
 function updateClock() {
