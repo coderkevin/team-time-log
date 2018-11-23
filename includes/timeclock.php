@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) or die();
 
 class Timeclock {
 	public function init() {
+		add_action( 'init', [ $this, 'set_cookie' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		add_action( 'team-time-log_timeclock_header', [ $this, 'check_permissions' ] );
 		add_action( 'team-time-log_timeclock_header', [ $this, 'process_post' ] );
@@ -21,6 +22,12 @@ class Timeclock {
 		add_action( 'team-time-log_user_select', [ $this, 'render_user_select' ] );
 		add_action( 'team-time-log_user_pin', [ $this, 'render_user_pin' ] );
 		add_action( 'team-time-log_keypad', [ $this, 'render_keypad' ] );
+	}
+
+	public function set_cookie() {
+		if ( current_user_can( 'edit_others_posts' ) ) {
+			set_timeclock_cookie();
+		}
 	}
 
 	public function enqueue_scripts() {
@@ -155,9 +162,8 @@ class Timeclock {
 			if ( ! current_user_can( 'publish_posts' ) ) {
 				wp_die( _( 'Insufficient permission', 'team-time-log', 403 ) );
 			}
-		} else {
-			// TODO: Only allow unauthenticated use for confirmed IP addresses.
-			error_log( 'unauthenticated view of time-clock' );
+		} else if ( ! has_timeclock_cookie() ) {
+			wp_die( _( 'Unauthorized browser', 'team-time-log', 403 ) );
 		}
 	}
 

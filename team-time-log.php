@@ -47,6 +47,8 @@ class Team_Time_Log {
 		$timeclock_title = _x( 'Time Clock', 'Page title', 'team-time-log' );
 
 		create_page( $timeclock_slug, 'team-time-log_timeclock_page_id', $timeclock_title );
+
+		set_cookie_seed();
 	}
 
 	public function deactivate_plugin() {

@@ -13,7 +13,11 @@ namespace coderkevin\TeamTimeLog;
 defined( 'ABSPATH' ) or die();
 
 // Entries are consider expired if they're older than 24 hours.
-define( 'ENTRY_EXPIRED_TIME', ( 60 * 60 * 24 ) );
+define( 'ENTRY_EXPIRED_TIME', DAY_IN_SECONDS );
+define( 'TIMECLOCK_COOKIE', 'team-time-log_timeclock' );
+define( 'TIMECLOCK_COOKIE_EXPIRATION', 365 * DAY_IN_SECONDS );
+define( 'TIMECLOCK_URL', '/time-clock/' );
+define( 'TIMECLOCK_COOKIE_SEED_OPTION', 'timeclock_cookie_seed' );
 
 function get_date_format() {
 	return get_option( 'date_format' );
@@ -58,6 +62,38 @@ function is_entry_active( $clock_in_gmt, $clock_out_gmt ) {
 	if ( $clock_in_gmt === $clock_out_gmt ) {
 		$time_ago = time() - strtotime( $clock_in_gmt );
 		return ENTRY_EXPIRED_TIME > $time_ago;
+	}
+	return false;
+}
+
+function set_cookie_seed() {
+	$value = random_int( PHP_INT_MIN, PHP_INT_MAX );
+	update_option( TIMECLOCK_COOKIE_SEED_OPTION, $value, true );
+}
+
+function set_timeclock_cookie() {
+	if ( TIMECLOCK_URL === $_SERVER["REQUEST_URI"] ) {
+		$seed = get_option( TIMECLOCK_COOKIE_SEED_OPTION );
+		$hash = md5( $seed );
+
+		setcookie(
+			TIMECLOCK_COOKIE,
+			$hash,
+			time() + ( 30 * DAY_IN_SECONDS ),
+			TIMECLOCK_URL,
+			COOKIE_DOMAIN,
+			false,
+			true
+		);
+	}
+}
+
+function has_timeclock_cookie() {
+	if ( isset( $_COOKIE[ TIMECLOCK_COOKIE ] ) ) {
+		$cookie = $_COOKIE[ TIMECLOCK_COOKIE ];
+		$seed = get_option( TIMECLOCK_COOKIE_SEED_OPTION );
+		$hash = md5( $seed );
+		return hash_equals( $hash, $cookie );
 	}
 	return false;
 }
