@@ -6,8 +6,8 @@
 
 jQuery( document ).ready( () => {
 	const userId = jQuery( '#timeclock-user-select' ).val();
-	updateForm( userId );
 
+	updateForm( userId );
 	if ( window.timeclock_notification ) {
 		const message = window.timeclock_notification.message;
 		const isError = window.timeclock_notification.isError;
@@ -24,6 +24,8 @@ jQuery( document ).ready( () => {
 
 		iqwerty.toast.Toast( message, options );
 	}
+
+	window.setInterval( updateClock, 500 );
 } );
 
 jQuery( '#timeclock-user-select' ).on( 'change', ( event ) => {
@@ -59,4 +61,23 @@ function updateForm( userId ) {
 	jQuery( '.keypad-button' ).attr( 'disabled', ! userSelected );
 	jQuery( '#timeclock-clock-in' ).attr( 'disabled', clockedIn );
 	jQuery( '#timeclock-clock-out' ).attr( 'disabled', ! clockedIn );
+}
+
+function updateClock() {
+	const now = new Date();
+
+	const isPM = now.getHours() > 11;
+	const hours12 = isPM ? now.getHours() - 12 : now.getHours()
+
+	const hours = twoDigit( hours12 );
+	const minutes = twoDigit( now.getMinutes() );
+	const seconds = twoDigit( now.getSeconds() ) ;
+	const ampm = isPM ? 'pm' : 'am';
+	const timeStr = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+
+	jQuery( '#timeclock-clock-digits' ).text( timeStr );
+}
+
+function twoDigit( value ) {
+	return ( value < 10 ? '0' + value : value );
 }
