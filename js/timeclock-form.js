@@ -7,6 +7,10 @@
 jQuery( document ).ready( () => {
 	const userId = jQuery( '#timeclock-user-select' ).val();
 	updateForm( userId );
+
+	if ( window.timeclock_notification ) {
+		iqwerty.toast.Toast( window.timeclock_notification );
+	}
 } );
 
 jQuery( '#timeclock-user-select' ).on( 'change', ( event ) => {

@@ -39,6 +39,13 @@ class Timeclock {
 				time(), // TODO: use filemtime
 				true
 			);
+			wp_enqueue_script(
+				'js-toast',
+				plugin_dir_url( __FILE__ ) . '../js/js-toast/toast.js',
+				[],
+				time(), // TODO: use filemtime
+				true
+			);
 		}
 	}
 
@@ -151,10 +158,17 @@ class Timeclock {
 			}
 		}
 
-		wp_add_inline_script(
-			'timeclock-form',
-			'var timeclock_user_info =' . json_encode( $user_info )
-		);
+		$script = 'var timeclock_user_info = ' . json_encode( $user_info ) . ';';
+
+		if ( isset( $this->notification ) ) {
+			$script = $script . ' var timeclock_notification = ' . json_encode( $this->notification ) . ';';
+		}
+
+		wp_add_inline_script( 'timeclock-form', $script );
+	}
+
+	public function set_notification( $message ) {
+		$this->notification = $message;
 	}
 
 	public function check_permissions() {
@@ -171,8 +185,8 @@ class Timeclock {
 		if ( ! empty( $_POST ) ) {
 			if ( is_user_logged_in() ) {
 				$this->verify_authenticated_timeclock_post();
-			} else {
-				$this->verify_unauthenticated_timeclock_post();
+			} else if ( ! $this->verify_unauthenticated_timeclock_post() ) {
+				return false;
 			}
 
 			switch( $_POST['action'] ) {
@@ -189,6 +203,8 @@ class Timeclock {
 
 	public function clock_in() {
 		$user_id = $_POST['user-select'];
+		$user = get_user_by( 'ID', $user_id );
+		$name = $user->data->display_name;
 
 		$postarr = [
 			'post_type' => 'time-log-entry',
@@ -196,17 +212,35 @@ class Timeclock {
 			'post_status' => 'publish',
 		];
 
-		return wp_insert_post( $postarr );
+		if ( wp_insert_post( $postarr ) > 0 ) {
+			$this->set_notification( $name . _( ' has clocked in' , 'team-time-log' ) );
+			return true;
+		} else {
+			$this->set_notification( _( 'Error on clock in' , 'team-time-log' ) );
+			error_log( 'Error on user ' . $user_id . ' clock in (wp_insert_post)' );
+			return false;
+		}
 	}
 
 	public function clock_out() {
 		$user_id = $_POST['user-select'];
+		$user = get_user_by( 'ID', $user_id );
+		$name = $user->data->display_name;
 		$entry = get_current_time_entry( $user_id );
 
 		if ( $entry ) {
-			return wp_update_post( $entry );
+			if ( wp_update_post( $entry ) > 0 ) {
+				$this->set_notification( $name . _( ' has clocked out' , 'team-time-log' ) );
+				return true;
+			} else {
+				$this->set_notification( _( 'Error on clock out' , 'team-time-log' ) );
+				error_log( 'Error on user ' . $user_id . ' clock in (wp_update_post)' );
+			}
 		}
 		wp_die( _( 'User is not clocked in.', 'team-time-log' ) );
+
+		$this->set_notification( $name . _( ' was not clocked in' , 'team-time-log' ) );
+		return true;
 	}
 
 	private function verify_authenticated_timeclock_post() {
@@ -234,8 +268,11 @@ class Timeclock {
 		$pin_hash = get_user_meta( $user->ID, 'team_time_log_pin', true );
 		$pin_verified = wp_check_password( $_POST[ 'user-pin' ], $pin_hash, $user->ID );
 		if ( ! $pin_verified ) {
-			wp_die( _( 'Incorrect PIN', 'team-time-log', 403 ) );
+			$this->set_notification( _( 'Incorrect PIN' , 'team-time-log' ) );
+			return false;
 		}
+
+		return true;
 	}
 }
 
