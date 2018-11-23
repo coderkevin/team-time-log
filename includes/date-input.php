@@ -1,7 +1,7 @@
 <?php
 namespace coderkevin\TeamTimeLog;
 
-function date_input( $name, $display_name, $date_time ) {
+function date_input( $name, $display_name, $date_time, $row_class ) {
 	$date = '';
 	$hour = '';
 	$minute = '';
@@ -13,10 +13,10 @@ function date_input( $name, $display_name, $date_time ) {
 	}
 ?>
 
-<fieldset>
-	<label>
-		<?php echo $display_name ?>
-	</label>
+<label class="<?php echo $row_class ?>">
+	<?php echo $display_name ?>
+</label>
+<div class="<?php echo $row_class ?>">
 	<input
 		type="text"
 		name="<?php echo $name . '_date' ?>"
@@ -43,6 +43,6 @@ function date_input( $name, $display_name, $date_time ) {
 		class="team-time-log-entry-minute"
 		aria-label="<?php echo __( 'Minute', 'team-time-log' ) ?>"
 	/>
-</fieldset>
+</div>
 
 <?php } ?>

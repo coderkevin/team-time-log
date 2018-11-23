@@ -1,25 +1,38 @@
 
 .team-time-log-entry {
-	display: flex;
-	flex-direction: column;
+	display: grid;
+	grid-template-columns: 10em auto;
+	grid-template-rows: 3em 3em auto;
 }
 
-.team-time-log-entry fieldset {
-	margin-bottom: 0.5em;
+.clock-in-row {
+	grid-row: 1;
+}
+
+.clock-out-row {
+	grid-row: 2;
+}
+
+.summary-row {
+	grid-row: 3;
+}
+
+.team-time-log-entry label {
+	grid-column: 1;
+}
+
+.team-time-log-entry div {
+	grid-column: 2;
+}
+
+.team-time-log-entry input {
+	height: 2em;
+}
+
+.team-time-log-entry-hour, .team-time-log-entry-minute {
+	width: 3em;
 }
 
 .team-time-log-entry textarea {
 	width: 100%;
-}
-
-.team-time-log-entry input {
-	height: 1.75em;
-}
-
-.team-time-log-entry-hour {
-	width: 3em;
-}
-
-.team-time-log-entry-minute {
-	width: 3em;
 }

@@ -13,13 +13,13 @@ function entry_metabox( $entry ) {
 ?>
 
 <div class="team-time-log-entry">
-	<?php date_input( 'clock_in_' . $entry_id, __( 'Clock In:', 'team-time-log' ), $clock_in_date ) ?>
-	<?php date_input( 'clock_out_' . $entry_id, __( 'Clock Out:', 'team-time-log' ), $clock_out_date ) ?>
+	<?php date_input( 'clock_in_' . $entry_id, __( 'Clock In:', 'team-time-log' ), $clock_in_date, 'clock-in-row' ) ?>
+	<?php date_input( 'clock_out_' . $entry_id, __( 'Clock Out:', 'team-time-log' ), $clock_out_date, 'clock-out-row' ) ?>
 
-	<fieldset>
-		<label>Summary:</label>
-		<textarea name="summary" rows="5" columns="60"><?php echo $summary ?></textarea>
-	</fieldset>
+	<label for="summary" class="summary-row">Summary:</label>
+	<div>
+		<textarea class="summary-row" name="summary" rows="5" columns="60"><?php echo $summary ?></textarea>
+	</div>
 </div>
 
 <?php } ?>
