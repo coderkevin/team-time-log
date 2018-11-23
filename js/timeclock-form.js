@@ -5,7 +5,8 @@
  */
 
 jQuery( document ).ready( () => {
-	updateForm( );
+	updateClock();
+	updateForm();
 
 	if ( window.timeclock_notification ) {
 		const message = window.timeclock_notification.message;
@@ -69,6 +70,16 @@ function updateForm() {
 	jQuery( '.keypad-button' ).attr( 'disabled', ! userSelected );
 	jQuery( '#timeclock-clock-in' ).attr( 'disabled', ! canClockIn );
 	jQuery( '#timeclock-clock-out' ).attr( 'disabled', ! canClockOut );
+
+	if ( ! userAuthed ) {
+		const pin = jQuery( '#user-pin' );
+		const keypad = jQuery( '#timeclock-keypad' );
+		const submit = jQuery( '.timeclock-submit' );
+
+		userSelected ? pin.show() : pin.hide();
+		userSelected ? keypad.show() : keypad.hide();
+		userSelected ? submit.show() : submit.hide();
+	}
 }
 
 function updateClock() {

@@ -28,7 +28,7 @@
 	<div id="content" class="site-content" tabindex="-1">
 		<div class="col-full">
 			<div id="timeclock-live-clock">
-				<span id="timeclock-clock-digits">--:--</span>
+				<span id="timeclock-clock-digits" />
 			</div>
 
 			<form id="timeclock-form" method="post" autocomplete="false">
