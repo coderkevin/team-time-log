@@ -167,8 +167,11 @@ class Timeclock {
 		wp_add_inline_script( 'timeclock-form', $script );
 	}
 
-	public function set_notification( $message ) {
-		$this->notification = $message;
+	public function set_notification( $message, $isError = false ) {
+		$this->notification = [
+			'message' => $message,
+			'isError' => $isError,
+		];
 	}
 
 	public function check_permissions() {
@@ -216,7 +219,7 @@ class Timeclock {
 			$this->set_notification( $name . _( ' has clocked in' , 'team-time-log' ) );
 			return true;
 		} else {
-			$this->set_notification( _( 'Error on clock in' , 'team-time-log' ) );
+			$this->set_notification( _( 'Error on clock in' , 'team-time-log' ), true );
 			error_log( 'Error on user ' . $user_id . ' clock in (wp_insert_post)' );
 			return false;
 		}
@@ -233,13 +236,13 @@ class Timeclock {
 				$this->set_notification( $name . _( ' has clocked out' , 'team-time-log' ) );
 				return true;
 			} else {
-				$this->set_notification( _( 'Error on clock out' , 'team-time-log' ) );
+				$this->set_notification( _( 'Error on clock out' , 'team-time-log' ), true );
 				error_log( 'Error on user ' . $user_id . ' clock in (wp_update_post)' );
 			}
 		}
 		wp_die( _( 'User is not clocked in.', 'team-time-log' ) );
 
-		$this->set_notification( $name . _( ' was not clocked in' , 'team-time-log' ) );
+		$this->set_notification( $name . _( ' was not clocked in' , 'team-time-log' ), true );
 		return true;
 	}
 
@@ -268,7 +271,7 @@ class Timeclock {
 		$pin_hash = get_user_meta( $user->ID, 'team_time_log_pin', true );
 		$pin_verified = wp_check_password( $_POST[ 'user-pin' ], $pin_hash, $user->ID );
 		if ( ! $pin_verified ) {
-			$this->set_notification( _( 'Incorrect PIN' , 'team-time-log' ) );
+			$this->set_notification( _( 'Incorrect PIN' , 'team-time-log' ), true );
 			return false;
 		}
 

@@ -9,7 +9,20 @@ jQuery( document ).ready( () => {
 	updateForm( userId );
 
 	if ( window.timeclock_notification ) {
-		iqwerty.toast.Toast( window.timeclock_notification );
+		const message = window.timeclock_notification.message;
+		const isError = window.timeclock_notification.isError;
+
+		const options = {
+			style: {
+				main: {
+					background: ( isError ? '#bb2727' : '#505050' ),
+					color: 'white',
+					'font-weight': ( isError ? 'bold' : 'normal' ),
+				}
+			}
+		};
+
+		iqwerty.toast.Toast( message, options );
 	}
 } );
 
