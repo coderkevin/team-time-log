@@ -39,6 +39,8 @@
 
 				<?php do_action( 'team-time-log_keypad' ); ?>
 
+				<?php do_action( 'team-time-log_summary' ); ?>
+
 				<fieldset>
 					<div class="timeclock-submit">
 						<button id="timeclock-clock-in" name="action" type="submit" form="timeclock-form" value="clock_in">

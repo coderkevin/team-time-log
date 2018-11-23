@@ -102,7 +102,7 @@ class Team_Time_Log {
 	function register_meta_box() {
 		add_meta_box(
 			'team_time_log_entry_times',
-			'Clock In/Out',
+			__( 'Time Log Entry', 'team-time-log' ),
 			[ $this, 'meta_box_callback' ],
 			'time-log-entry',
 			'normal',

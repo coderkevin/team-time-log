@@ -5,10 +5,11 @@
 }
 
 .team-time-log-entry fieldset {
-	height: 2.5em;
+	margin-bottom: 0.5em;
 }
 
-.team-time-log-entry label {
+.team-time-log-entry textarea {
+	width: 100%;
 }
 
 .team-time-log-entry input {

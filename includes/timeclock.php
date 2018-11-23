@@ -22,6 +22,7 @@ class Timeclock {
 		add_action( 'team-time-log_user_select', [ $this, 'render_user_select' ] );
 		add_action( 'team-time-log_user_pin', [ $this, 'render_user_pin' ] );
 		add_action( 'team-time-log_keypad', [ $this, 'render_keypad' ] );
+		add_action( 'team-time-log_summary', [ $this, 'render_summary' ] );
 	}
 
 	public function set_cookie() {
@@ -141,6 +142,28 @@ class Timeclock {
 		echo( '</fieldset>' );
 	}
 
+	public function render_summary() {
+		if ( ! is_user_logged_in() ) {
+			// Unauthenticated timeclocks don't require a summary.
+			return;
+		}
+		$user = wp_get_current_user();
+		$clocked_in = is_clocked_in( $user->ID );
+		$summary = $clocked_in ? get_current_time_entry( $user->ID )->post_content : '';
+
+		$question = ! $clocked_in ?
+			__( 'What are you going to accomplish today?', 'team-time-log' ) :
+			__( 'What did you accomplish today?', 'team-time-log' );
+		$placeholder = __( 'Examples:&#10;Visit businesses for sponsorship.&#10;Presentation at Chamber of Commerce', 'team-time-log' );
+
+		echo( '<fieldset>' );
+		echo( '  <label>' . $question . '</label>' );
+		echo( '  <textarea name="summary" id="timeclock-summary" rows="5" cols="60" placeholder="' . $placeholder . '">' );
+		echo( $summary );
+		echo( '</textarea>' );
+		echo( '</fieldset>' );
+	}
+
 	public function enqueue_user_data() {
 		if ( is_user_logged_in() ) {
 			$users = [ wp_get_current_user() ];
@@ -210,11 +233,13 @@ class Timeclock {
 		$user_id = $_POST['user-select'];
 		$user = get_user_by( 'ID', $user_id );
 		$name = $user->data->display_name;
+		$summary = $_POST['summary'];
 
 		$postarr = [
 			'post_type' => 'time-log-entry',
 			'post_author' => $user_id,
 			'post_status' => 'publish',
+			'post_content' => $summary,
 		];
 
 		if ( wp_insert_post( $postarr ) > 0 ) {
@@ -231,7 +256,10 @@ class Timeclock {
 		$user_id = $_POST['user-select'];
 		$user = get_user_by( 'ID', $user_id );
 		$name = $user->data->display_name;
+		$summary = $_POST['summary'];
+
 		$entry = get_current_time_entry( $user_id );
+		$entry->post_content = $summary;
 
 		if ( $entry ) {
 			if ( wp_update_post( $entry ) > 0 ) {
