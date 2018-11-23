@@ -154,7 +154,7 @@ class Timeclock {
 		$question = ! $clocked_in ?
 			__( 'What are you going to accomplish today?', 'team-time-log' ) :
 			__( 'What did you accomplish today?', 'team-time-log' );
-		$placeholder = __( 'Examples:&#10;Visit businesses for sponsorship.&#10;Presentation at Chamber of Commerce', 'team-time-log' );
+		$placeholder = __( 'Examples:&#10;Visit businesses for sponsorship.&#10;Presentation at Chamber of Commerce.', 'team-time-log' );
 
 		echo( '<fieldset>' );
 		echo( '  <label>' . $question . '</label>' );
