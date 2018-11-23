@@ -145,6 +145,7 @@ class Timeclock {
 	public function render_summary() {
 		if ( ! is_user_logged_in() ) {
 			// Unauthenticated timeclocks don't require a summary.
+			echo( '<input type="hidden" name="summary" value="' . __( 'Shop Time', 'team-time-log' ) . '" />' );
 			return;
 		}
 		$user = wp_get_current_user();
@@ -259,12 +260,12 @@ class Timeclock {
 		$summary = $_POST['summary'];
 		$entry = get_current_time_entry( $user_id );
 
-		$data = [
-			'ID' => $entry->ID,
-			'post_content' => $summary,
-		];
-
 		if ( $entry ) {
+			$data = [
+				'ID' => $entry->ID,
+				'post_content' => $summary,
+			];
+
 			if ( 0 === strlen( $summary ) ) {
 				$this->set_notification( __( 'Summary is mandatory', 'team-time-log' ), true );
 				return false;

@@ -5,8 +5,8 @@
  */
 
 jQuery( document ).ready( () => {
-	updateClock();
 	updateForm();
+	updateClock();
 
 	if ( window.timeclock_notification ) {
 		const message = window.timeclock_notification.message;
