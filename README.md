@@ -3,8 +3,6 @@ Time Logging for Team activities
 
 Track your team's time spent working or during activities, with a timeclock mode for your shop or facility, and the ability to clock in or out from their own devices when doing off-site work.
 
-![Authenticated Time Clock with PIN keypad](docs/Time_Clock-Authenticated.png)
-
 ![Unauthenticated Time Clock with PIN keypad](docs/Time_Clock-Unauthenticated.png)
 
 ## Plugin for WordPress
