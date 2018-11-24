@@ -26,6 +26,9 @@ jQuery( document ).ready( () => {
 	}
 
 	window.setInterval( updateClock, 500 );
+
+	// Refresh after 5 minutes, to update user states.
+	window.setTimeout( reloadPage, 5 * 60 * 1000 );
 } );
 
 jQuery( '#timeclock-user-select' ).on( 'change', ( event ) => {
@@ -43,6 +46,10 @@ jQuery( '.keypad-button' ).on( 'click', ( event ) => {
 	const pin = updatePin( previousPin, buttonValue );
 	jQuery( '#user-pin' ).val( pin ).trigger( 'input' );
 } );
+
+function reloadPage() {
+	window.location.assign( window.location.href );
+}
 
 function updatePin( previousPin, buttonValue ) {
 	switch( buttonValue ) {
