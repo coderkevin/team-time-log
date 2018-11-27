@@ -20,12 +20,12 @@ namespace coderkevin\TeamTimeLog;
  */
 defined( 'ABSPATH' ) or die();
 
-include_once 'includes/utils.php';
-include_once 'includes/handle_post_data.php';
-include_once 'includes/entry-metabox.php';
-include_once 'includes/admin/class-admin-user-profile.php';
-include_once 'includes/timeclock.php';
-include_once 'timeclock-theme/class-timeclock-theme-loader.php';
+include_once dirname( __FILE__ ) . '/includes/utils.php';
+include_once dirname( __FILE__ ) . '/includes/handle_post_data.php';
+include_once dirname( __FILE__ ) . '/includes/entry-metabox.php';
+include_once dirname( __FILE__ ) . '/includes/admin/class-admin-user-profile.php';
+include_once dirname( __FILE__ ) . '/includes/timeclock.php';
+include_once dirname( __FILE__ ) . '/timeclock-theme/class-timeclock-theme-loader.php';
 
 // TODO: Move admin stuff to another class and only include when needed.
 class Team_Time_Log {

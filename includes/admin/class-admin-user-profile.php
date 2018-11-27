@@ -12,7 +12,7 @@ namespace coderkevin\TeamTimeLog;
 
 defined( 'ABSPATH' ) or die();
 
-include_once 'admin-user-profile-fieldset.php';
+include_once dirname( __FILE__ ) . '/admin-user-profile-fieldset.php';
 
 class Admin_Profile {
 	public function init() {
