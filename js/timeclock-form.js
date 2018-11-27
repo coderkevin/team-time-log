@@ -93,7 +93,10 @@ function updateClock() {
 	const now = new Date();
 
 	const isPM = now.getHours() > 11;
-	const hours12 = isPM ? now.getHours() - 12 : now.getHours()
+	let hours12 = now.getHours();
+	if ( isPM && hours12 > 12 ) {
+		hours12 = hours12 - 12;
+	}
 
 	const hours = twoDigit( hours12 );
 	const minutes = twoDigit( now.getMinutes() );
