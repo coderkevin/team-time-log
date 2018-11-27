@@ -11,7 +11,7 @@ namespace coderkevin\TeamTimeLog;
  * Plugin Name: Team Time Log
  * Plugin URI:  https://github.com/coderkevin/team-time-log
  * Description: Time logging for team activities.
- * Version:     0.1.0
+ * Version:     0.1.1
  * Author:      Kevin Killingsworth
  * Author URI:  https://coderkevin.com
  * Text Domain: team-time-log
@@ -75,7 +75,7 @@ class Team_Time_Log {
 			'items_list_navigation' => _x( 'Time entries list navigation', 'Screen reader text for the pagination heading on the post type listing screen. Default “Posts list navigation”/”Pages list navigation”. Added in 4.4', 'textdomain' ),
 			'items_list'            => _x( 'Time entries list', 'Screen reader text for the items list heading on the post type listing screen. Default “Posts list”/”Pages list”. Added in 4.4', 'textdomain' ),
 		);
-	 
+
 		$args = array(
 			'labels'             => $labels,
 			'description'        => 'Team time log entries for time logged.',
@@ -94,7 +94,7 @@ class Team_Time_Log {
 			'delete_with_user'   => true,
 			'register_meta_box_cb' => [ $this, 'register_meta_box' ],
 		);
-	 
+
 		register_post_type( 'time-log-entry', $args );
 	}
 
@@ -112,7 +112,7 @@ class Team_Time_Log {
 
 	function enqueue_admin_scripts() {
 		wp_enqueue_script(
-			'team-time-log-admin', 
+			'team-time-log-admin',
 			plugin_dir_url( __FILE__ ) . 'js/team-time-log-admin.js',
 			[ 'jquery', 'jquery-ui-core', 'jquery-ui-datepicker' ],
 			time(), // TODO: use filemtime
