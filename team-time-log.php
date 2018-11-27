@@ -11,7 +11,7 @@ namespace coderkevin\TeamTimeLog;
  * Plugin Name: Team Time Log
  * Plugin URI:  https://github.com/coderkevin/team-time-log
  * Description: Time logging for team activities.
- * Version:     0.1.1
+ * Version:     0.2.0
  * Author:      Kevin Killingsworth
  * Author URI:  https://coderkevin.com
  * Text Domain: team-time-log
