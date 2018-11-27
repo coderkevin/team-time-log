@@ -1,4 +1,23 @@
 
+.col-full {
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+@media (min-width: 800px) {
+	.col-full {
+		max-width: 800px;
+	}
+}
+
+@media (max-width: 799px) {
+	.col-full {
+		width: 100%;
+	}
+}
+
 #masthead {
 	padding-top: 1em;
 	padding-bottom: 0;
@@ -6,6 +25,8 @@
 	background-color: #444;
 	color: #BBB;
 	margin-bottom: 1em;
+	position: relative;
+	width: 100%;
 }
 
 #masthead h1, h2, h3, h4, h5, h6 {
@@ -13,8 +34,11 @@
 }
 
 #timeclock-live-clock {
+	font-family: 'Courier New', Courier, monospace;
+	font-weight: 600;
 	font-size: 4rem;
 	text-align: center;
+	line-height: 1;
 }
 
 #timeclock-form {
@@ -35,7 +59,9 @@
 #timeclock-form #timeclock-single-user-select {
 	display: block;
 	margin: 0 auto;
+	padding: 0;
 	text-align: center;
+	font-size: 2rem;
 }
 
 #timeclock-form select {
@@ -43,6 +69,8 @@
 	display: block;
 	margin: 0 auto;
 	padding: 0.5rem;
+	height: 2.5em;
+	width: 100%;
 	min-width: 50%;
 }
 
@@ -51,6 +79,15 @@
 	display: block;
 	margin: 0 auto;
 	min-width: 10rem;
+}
+
+#timeclock-form textarea {
+	width: 100%;
+}
+
+#timeclock-form button {
+	padding: 1em 1.5em;
+	font-weight: 600;
 }
 
 #timeclock-keypad {
