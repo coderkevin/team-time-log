@@ -79,9 +79,13 @@ class Timeclock {
 
 			foreach( $users as $user ) {
 				$id = $user->ID;
-				$status = is_clocked_in( $user->ID ) ? _( '[in]', 'team-time-log' ) : '';
-				$name = esc_html( $user->data->display_name ) . ' ' . $status;
-				echo '    <option value="' . $id . '">' . $name . '</option>';
+				$pin_hash = get_user_meta( $id, 'team_time_log_pin', true );
+
+				if ( isset( $pin_hash ) && strlen( $pin_hash ) > 0 ) {
+					$status = is_clocked_in( $id ) ? _( '[in]', 'team-time-log' ) : '';
+					$name = esc_html( $user->data->display_name ) . ' ' . $status;
+					echo '    <option value="' . $id . '">' . $name . '</option>';
+				}
 			}
 			echo( '  </select>' );
 			echo( '</fieldset>' );
