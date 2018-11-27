@@ -12,9 +12,17 @@
 	}
 }
 
-@media (max-width: 799px) {
-	.col-full {
-		width: 100%;
+@media (max-height: 549px) {
+	#masthead {
+		display:none;
+	}
+
+	.site-content {
+		margin-top: 0.5rem;
+	}
+
+	.site-footer {
+		display: none;
 	}
 }
 
@@ -41,13 +49,10 @@
 	line-height: 1;
 }
 
-#timeclock-form {
-	padding-top: 1em;
-}
-
 #timeclock-form fieldset {
 	margin: 0.5em;
 	padding: 0;
+	border: 0;
 }
 
 #timeclock-form label {
@@ -68,8 +73,7 @@
 	font-size: 1.5rem;
 	display: block;
 	margin: 0 auto;
-	padding: 0.5rem;
-	height: 2.5em;
+	height: 2em;
 	width: 100%;
 	min-width: 50%;
 }
@@ -78,6 +82,7 @@
 	font-size: 1 rem;
 	display: block;
 	margin: 0 auto;
+	padding: 0;
 	min-width: 10rem;
 }
 
@@ -88,6 +93,8 @@
 #timeclock-form button {
 	padding: 1em 1.5em;
 	font-weight: 600;
+	font-size: 1rem;
+	line-height: 0.75;
 }
 
 #timeclock-keypad {
@@ -97,6 +104,9 @@
 	grid-template-rows: 25% 25% 25% 25%;
 	grid-column-gap: 1px;
 	grid-row-gap: 1px;
+	width: 30em;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .timeclock-submit {
